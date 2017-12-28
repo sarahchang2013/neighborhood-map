@@ -7,7 +7,7 @@ function initMap() {
     });
 }
 
-locations = [
+var locations = [
 	{
 		name: "National Library of Serbia"
 	},
@@ -25,8 +25,21 @@ locations = [
 	}
 ]
 
+//Bind with input by "textInput: searchText" to instantly update,
+//"value: searchText" will only updates when user clicks the page.
+var searchText = ko.observable(""); 
+
 var Location = function(data) {
 	this.name = ko.observable(data.name);
+	this.displayName = ko.computed(function() {
+		//Observables must be followed with () to update
+		if (searchText() == "") {
+			return true;
+		} else {
+			//Convert to lowercases to find matching substrings.
+			return this.name().toLowerCase().includes(searchText().toLowerCase());
+		}
+	}, this);
 }
 
 var ViewModel = function() {

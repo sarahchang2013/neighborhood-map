@@ -5,10 +5,12 @@
 	</head>
 	<body>
 		
-		<input id="search-text" type="text" placeholder="Enter the place you want to visit">
+		<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
 		<input id="searchButton" type="button" value="Filter">
 		<div data-bind="foreach: locationList">
-			<span class="location" data-bind="text:name"></span><br>
+			<div class="location" data-bind="if: displayName">
+				<h3 data-bind="text:name"></h3>
+			</div>
 		</div>
 
 		<div id="map"></div>
