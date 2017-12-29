@@ -1,8 +1,7 @@
-var map;
-var markers = [];
+let markers = [];
 function initMap() {
 	// Constructor creates a new map - only center and zoom are required.
-	map = new google.maps.Map(document.getElementById('map'), {
+	let map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 44.816667, lng: 20.466667},
 		zoom: 13
     });
@@ -33,11 +32,13 @@ const locations = [
 	}
 ]
 
+//const defaultIcon = makeMarkerIcon('0091ff');
+
 //Bind with input by "textInput: searchText" to instantly update,
 //"value: searchText" will only updates when user clicks the page.
-var searchText = ko.observable(""); 
+let searchText = ko.observable("");
 
-var Location = function(data) {
+let Location = function(data) {
 	this.name = ko.observable(data.name);
 	this.location = data.location;
 	this.displayName = ko.computed(function() {
@@ -51,8 +52,12 @@ var Location = function(data) {
 	}, this);
 }
 
-var ViewModel = function() {
-	var self = this;
+for (let i = 0; i < locations.length; i++) {
+	var position = locations[i].location;
+}
+
+let ViewModel = function() {
+	let self = this;
 	self.locationList = ko.observableArray([]);
 	for (let i = 0; i < locations.length; i++) {
 		self.locationList.push(new Location(locations[i]));
