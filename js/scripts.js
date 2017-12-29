@@ -1,4 +1,5 @@
 var map;
+var markers = [];
 function initMap() {
 	// Constructor creates a new map - only center and zoom are required.
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -7,7 +8,7 @@ function initMap() {
     });
 }
 
-var locations = [
+const locations = [
 	{
 		name: "National Library of Serbia"
 	},
@@ -45,7 +46,7 @@ var Location = function(data) {
 var ViewModel = function() {
 	var self = this;
 	self.locationList = ko.observableArray([]);
-	for (var i=0; i<locations.length; i++) {
+	for (let i = 0; i < locations.length; i++) {
 		self.locationList.push(new Location(locations[i]));
 	}
 }
