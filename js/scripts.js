@@ -1,12 +1,3 @@
-let markers = [];
-function initMap() {
-	// Constructor creates a new map - only center and zoom are required.
-	let map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 44.816667, lng: 20.466667},
-		zoom: 13
-    });
-}
-
 //Locations, can be stored in a database and read from it
 //Additional functions to add places can be achieved with Places API
 const locations = [
@@ -32,8 +23,6 @@ const locations = [
 	}
 ]
 
-//const defaultIcon = makeMarkerIcon('0091ff');
-
 //Bind with input by "textInput: searchText" to instantly update,
 //"value: searchText" will only updates when user clicks the page.
 let searchText = ko.observable("");
@@ -52,10 +41,55 @@ let Location = function(data) {
 	}, this);
 }
 
-for (let i = 0; i < locations.length; i++) {
-	var position = locations[i].location;
+
+function initMap() {
+	// Constructor creates a new map - only center and zoom are required.
+	let map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 44.816667, lng: 20.466667},
+		zoom: 13
+    });
+    const defaultIcon = makeMarkerIcon('0091ff');
+	let markers = [];
+
+	for (let i = 0; i < locations.length; i++) {
+		//Create markers of locations
+		let position = locations[i].location;
+		let title = locations[i].name;
+		let marker = new google.maps.Marker({
+			position: position,
+			title: title,
+			animation: google.maps.Animation.DROP,
+			icon: defaultIcon,
+			id: i
+		});
+		//Push markers to the array of markers
+		markers.push(marker);
+	}
+
+    let bounds = new google.maps.LatLngBounds();
+	//Extend the boundaries of map for each marker
+	for (let i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+		bounds.extend(markers[i].position);
+	}
+	
+	//Display markers of listed locations on map
+	map.fitBounds(bounds);
 }
 
+//Function to make marker icons and color them
+function makeMarkerIcon(markerColor) {
+	let markerImage = new google.maps.MarkerImage(
+		'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+		 '|40|_|%E2%80%A2',
+		new google.maps.Size(21, 34),
+		new google.maps.Point(0, 0),
+		new google.maps.Point(10, 34),
+		new google.maps.Size(21,34));
+	return markerImage;
+}
+
+//Knockout ViewModel
 let ViewModel = function() {
 	let self = this;
 	self.locationList = ko.observableArray([]);
