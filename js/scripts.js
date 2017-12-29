@@ -23,79 +23,90 @@ const locations = [
 	}
 ]
 
-//Bind with input by "textInput: searchText" to instantly update,
-//"value: searchText" will only updates when user clicks the page.
+//searchText needs to be global for both 
+//Location and ViewModel to access
 let searchText = ko.observable("");
 
-let Location = function(data) {
-	this.name = ko.observable(data.name);
-	this.location = data.location;
-	this.displayName = ko.computed(function() {
-		//Observables must be followed with () to update
-		if (searchText() == "") {
-			return true;
-		} else {
-			//Convert to lowercases to find matching substrings.
-			return this.name().toLowerCase().includes(searchText().toLowerCase());
-		}
-	}, this);
-}
-
-
-function initMap() {
+//Initialize the map when Google API is loaded
+//All google.xx calls should be put here
+//to avoid undefined "google" errors
+function initMap() {	
 	// Constructor creates a new map - only center and zoom are required.
-	let map = new google.maps.Map(document.getElementById('map'), {
+	const map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 44.816667, lng: 20.466667},
 		zoom: 13
-    });
-    const defaultIcon = makeMarkerIcon('0091ff');
+	});
+
+	const defaultIcon = makeMarkerIcon('0091ff');
 	let markers = [];
-
-	for (let i = 0; i < locations.length; i++) {
-		//Create markers of locations
-		let position = locations[i].location;
-		let title = locations[i].name;
-		let marker = new google.maps.Marker({
-			position: position,
-			title: title,
-			animation: google.maps.Animation.DROP,
-			icon: defaultIcon,
-			id: i
-		});
-		//Push markers to the array of markers
-		markers.push(marker);
-	}
-
-    let bounds = new google.maps.LatLngBounds();
-	//Extend the boundaries of map for each marker
-	for (let i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
-		bounds.extend(markers[i].position);
+	
+	//Make marker icons and color them
+	function makeMarkerIcon(markerColor) {
+		let markerImage = new google.maps.MarkerImage(
+			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+			 '|40|_|%E2%80%A2',
+			new google.maps.Size(21, 34),
+			new google.maps.Point(0, 0),
+			new google.maps.Point(10, 34),
+			new google.maps.Size(21,34));
+		return markerImage;
 	}
 	
-	//Display markers of listed locations on map
-	map.fitBounds(bounds);
-}
+	//Define the model of Location
+	let Location = function(data) {
+		this.name = ko.observable(data.name);
+		this.location = data.location;
+		this.display = ko.computed(function() {
+			//Observables must be followed with () to update
+			if (searchText() == "") {
+				return true;
+			} else {
+				//Convert to lowercases to find matching substrings.
+				return this.name().toLowerCase().includes(searchText().toLowerCase());
+			}
+		}, this);
+	}		
 
-//Function to make marker icons and color them
-function makeMarkerIcon(markerColor) {
-	let markerImage = new google.maps.MarkerImage(
-		'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-		 '|40|_|%E2%80%A2',
-		new google.maps.Size(21, 34),
-		new google.maps.Point(0, 0),
-		new google.maps.Point(10, 34),
-		new google.maps.Size(21,34));
-	return markerImage;
-}
+	//Knockout ViewModel
+	let ViewModel = function() {
+		let self = this;
+		
+		//Bind with input by "textInput: searchText" to instantly update,
+		//"value: searchText" will only updates when user clicks the page.
+		self.locationList = ko.observableArray([]);
+		for (let i = 0; i < locations.length; i++) {
+			self.locationList.push(new Location(locations[i]));
+		}
+		
+		//Create markers of all locations
+		for (let i = 0; i < locations.length; i++) {
+			let position = locations[i].location;
+			let title = locations[i].name;
+			let marker = new google.maps.Marker({
+				position: position,
+				title: title,
+				animation: google.maps.Animation.DROP,
+				icon: defaultIcon,
+				id: i
+			});
+			//Push markers to the array of markers
+			markers.push(marker);
+		}
+		let bounds = new google.maps.LatLngBounds();
+		//Extend the boundaries of map for each marker
+		for (let i = 0; i < markers.length; i++) {
+				markers[i].setMap(map);
+				bounds.extend(markers[i].position);
+		}
+		//Display markers of all locations on map
+		map.fitBounds(bounds);
 
-//Knockout ViewModel
-let ViewModel = function() {
-	let self = this;
-	self.locationList = ko.observableArray([]);
-	for (let i = 0; i < locations.length; i++) {
-		self.locationList.push(new Location(locations[i]));
+		//Change markers' visibility with input text
+		searchText.subscribe(function() {
+   			for (let i = 0; i < markers.length; i++) {
+   				markers[i].setVisible(self.locationList()[i].display());
+   			}
+		});	
 	}
+	ko.applyBindings(new ViewModel());
 }
-
-ko.applyBindings(new ViewModel());
