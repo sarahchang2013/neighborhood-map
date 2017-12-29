@@ -8,21 +8,28 @@ function initMap() {
     });
 }
 
+//Locations, can be stored in a database and read from it
+//Additional functions to add places can be achieved with Places API
 const locations = [
 	{
-		name: "National Library of Serbia"
+		name: "National Library of Serbia",
+		location: {lat: 44.797666, lng: 20.467423}
 	},
 	{
-		name: "Church of Saint Sava"
+		name: "Church of Saint Sava",
+		location: {lat: 44.798309, lng: 20.469086}
 	},
 	{
-		name: "Old Palace"
+		name: "Old Palace",
+		location: {lat: 44.811105, lng: 20.462534}
 	},
 	{
-		name: "Belgrade City Library"
+		name: "Belgrade City Library",
+		location: {lat: 44.820358, lng: 20.453665}
 	},
 	{
-		name: "Kalemegdan Park"
+		name: "Kalemegdan Park",
+		location: {lat: 44.822479, lng: 20.450888}
 	}
 ]
 
@@ -32,6 +39,7 @@ var searchText = ko.observable("");
 
 var Location = function(data) {
 	this.name = ko.observable(data.name);
+	this.location = data.location;
 	this.displayName = ko.computed(function() {
 		//Observables must be followed with () to update
 		if (searchText() == "") {
