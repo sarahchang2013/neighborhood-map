@@ -42,22 +42,11 @@ function initMap() {
 	const highlightedIcon = makeMarkerIcon('ffff24');
 	let markers = [];
 	
-	//Make marker icons and color them
-	function makeMarkerIcon(markerColor) {
-		let markerImage = new google.maps.MarkerImage(
-			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-			 '|40|_|%E2%80%A2',
-			new google.maps.Size(21, 34),
-			new google.maps.Point(0, 0),
-			new google.maps.Point(10, 34),
-			new google.maps.Size(21,34));
-		return markerImage;
-	}
-	
 	//Define the model of Location
 	let Location = function(data, index) {
 		this.name = ko.observable(data.name);
 		this.location = data.location;
+		//Decide if an item is displayed or not by input
 		this.display = ko.computed(function() {
 			//Observables must be followed with () to update
 			if (searchText() == "") {
@@ -68,21 +57,15 @@ function initMap() {
 			}
 		}, this);
 		this.showInfo = function() {
-			markers[index].setIcon(highlightedIcon);
+			respondToClick(index);
 		}
 	}		
 
 	//Knockout ViewModel
 	let ViewModel = function() {
 		let self = this;
-		
-		//Bind with input by "textInput: searchText" to instantly update,
-		//"value: searchText" will only updates when user clicks the page.
-		self.locationList = ko.observableArray([]);
-		for (let i = 0; i < locations.length; i++) {
-			self.locationList.push(new Location(locations[i], i));
-		}
-		
+		//markers[] must be populated before locationList
+		//to make Location.showInfo work	
 		//Create markers of all locations
 		for (let i = 0; i < locations.length; i++) {
 			let position = locations[i].location;
@@ -94,13 +77,12 @@ function initMap() {
 				icon: defaultIcon,
 				id: i
 			});
-			//For unknown reasons, marker.addListener doesn't work here.
-			google.maps.event.addListener(marker, 'click', function() {
-  				marker.setIcon(highlightedIcon);
-				//populateInfoWindow(this, infoWindow);
-			});
 			//Push markers to the array of markers
 			markers.push(marker);
+			//Respond to click
+			markers[i].addListener('click', function() {
+				respondToClick(i);
+			});
 		}
 		let bounds = new google.maps.LatLngBounds();
 		//Extend the boundaries of map for each marker
@@ -111,6 +93,13 @@ function initMap() {
 		//Display markers of all locations on map
 		map.fitBounds(bounds);
 
+		//Make the list an observable array
+		//Bind with input by "textInput: searchText" to instantly update
+		//("value: searchText" will only updates when user clicks the page)
+		self.locationList = ko.observableArray([]);
+		for (let i = 0; i < locations.length; i++) {
+			self.locationList.push(new Location(locations[i], i));
+		}
 		//Change markers' visibility with input text
 		searchText.subscribe(function() {
    			for (let i = 0; i < markers.length; i++) {
@@ -118,5 +107,38 @@ function initMap() {
    			}
 		});	
 	}
+
+	//Make marker icons and color them
+	function makeMarkerIcon(markerColor) {
+		let markerImage = new google.maps.MarkerImage(
+			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+			 '|40|_|%E2%80%A2',
+			new google.maps.Size(21, 34),
+			new google.maps.Point(0, 0),
+			new google.maps.Point(10, 34),
+			new google.maps.Size(21,34));
+		return markerImage;
+	}
+	//Open an infoWindow when item or marker is clicked
+	function populateInfoWindow(marker, infoWindow) {
+		if (infoWindow.marker != marker) {
+			infoWindow.marker = marker;
+			infoWindow.setContent('<div>' + marker.title + '</div>');
+			infoWindow.open(map, marker);
+			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
+			google.maps.event.addListener(infoWindow, 'closeclick', function() {
+				infoWindow.setMarker = null;
+				marker.setIcon(defaultIcon);
+			});
+		}
+	}
+	//When list item or marker is clicked, 
+	//change marker color and open an infowindow
+	function respondToClick(index) {
+		let infoWindow = new google.maps.InfoWindow();
+		markers[index].setIcon(highlightedIcon);
+		populateInfoWindow(markers[index], infoWindow);
+	}
+
 	ko.applyBindings(new ViewModel());
 }
