@@ -75,7 +75,17 @@ function initMap() {
 				title: title,
 				animation: google.maps.Animation.DROP,
 				icon: defaultIcon,
-				id: i
+				id: i,
+				address: ""
+			});
+			//Get the address by reverse geocoding from marker.position
+			let geocoder = new google.maps.Geocoder;
+			geocoder.geocode({'location': position}, function(results, status) {
+				if (status === 'OK') {
+      				if (results[0]) {
+      					marker.address = results[0].formatted_address;
+      				}
+      			}
 			});
 			//Push markers to the array of markers
 			markers.push(marker);
@@ -123,7 +133,7 @@ function initMap() {
 	function populateInfoWindow(marker, infoWindow) {
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
-			infoWindow.setContent('<div>' + marker.title + '</div>');
+			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address + '</div>');
 			infoWindow.open(map, marker);
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
 			google.maps.event.addListener(infoWindow, 'closeclick', function() {
