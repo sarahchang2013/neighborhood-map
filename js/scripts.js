@@ -23,13 +23,14 @@ const locations = [
 	}
 ]
 
-//searchText needs to be global for both 
-//Location and ViewModel to access
+//searchText needs to be global,
+//1.to be accessible for initMap when initially loaded,
+//2.to be accessible for ViewModel to work afterwards.
 let searchText = ko.observable("");
 
 //Initialize the map when Google API is loaded
 //All google.xx calls should be put here
-//to avoid undefined "google" errors
+//to avoid "undefined google" errors
 function initMap() {	
 	// Constructor creates a new map - only center and zoom are required.
 	const map = new google.maps.Map(document.getElementById('map'), {
@@ -38,6 +39,7 @@ function initMap() {
 	});
 
 	const defaultIcon = makeMarkerIcon('0091ff');
+	const highlightedIcon = makeMarkerIcon('ffff24');
 	let markers = [];
 	
 	//Make marker icons and color them
@@ -53,7 +55,7 @@ function initMap() {
 	}
 	
 	//Define the model of Location
-	let Location = function(data) {
+	let Location = function(data, index) {
 		this.name = ko.observable(data.name);
 		this.location = data.location;
 		this.display = ko.computed(function() {
@@ -65,6 +67,9 @@ function initMap() {
 				return this.name().toLowerCase().includes(searchText().toLowerCase());
 			}
 		}, this);
+		this.showInfo = function() {
+			markers[index].setIcon(highlightedIcon);
+		}
 	}		
 
 	//Knockout ViewModel
@@ -75,7 +80,7 @@ function initMap() {
 		//"value: searchText" will only updates when user clicks the page.
 		self.locationList = ko.observableArray([]);
 		for (let i = 0; i < locations.length; i++) {
-			self.locationList.push(new Location(locations[i]));
+			self.locationList.push(new Location(locations[i], i));
 		}
 		
 		//Create markers of all locations
@@ -88,6 +93,11 @@ function initMap() {
 				animation: google.maps.Animation.DROP,
 				icon: defaultIcon,
 				id: i
+			});
+			//For unknown reasons, marker.addListener doesn't work here.
+			google.maps.event.addListener(marker, 'click', function() {
+  				marker.setIcon(highlightedIcon);
+				//populateInfoWindow(this, infoWindow);
 			});
 			//Push markers to the array of markers
 			markers.push(marker);

@@ -4,16 +4,15 @@
 		<link rel=stylesheet type=text/css href="css/styles.css">
 	</head>
 	<body>
-		
-		<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
-		<input id="searchButton" type="button" value="Filter">
-		<div data-bind="foreach: locationList">
-			<div class="location" data-bind="if: display">
-				<h3 data-bind="text:name"></h3>
+		<div class="search-list">
+			<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
+			<div data-bind="foreach: locationList">
+				<div class="location" data-bind="if: display">
+					<h3 data-bind="text: name, click: showInfo"></h3>
+				</div>
 			</div>
 		</div>
-
-		<div id="map"></div>
+		<div class="map" id="map"></div>
 		<script src="js/lib/knockout-3.4.2.js"></script>
 		<script src="js/scripts.js"></script>
     	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuv5JwkXy2ha8gF8M98mpT4Xzx-iPB160&v=3&callback=initMap">
