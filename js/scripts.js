@@ -33,7 +33,7 @@ let searchText = ko.observable("");
 //to avoid "undefined google" errors
 function initMap() {	
 	// Constructor creates a new map - only center and zoom are required.
-	const map = new google.maps.Map(document.getElementById('map'), {
+	let map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 44.816667, lng: 20.466667},
 		zoom: 13
 	});
@@ -146,6 +146,8 @@ function initMap() {
 	//change marker color and open an infowindow
 	function respondToClick(index) {
 		let infoWindow = new google.maps.InfoWindow();
+		//Center the map to marker's position
+		map.setCenter(markers[index].position);
 		markers[index].setIcon(highlightedIcon);
 		populateInfoWindow(markers[index], infoWindow);
 	}
