@@ -134,7 +134,8 @@ function initMap() {
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
 			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address +
-			 '<br>' + nearby + '<br></div>');
+			 '<br>Cafes and Restaurants Nearby:<br><div id="near_position' + marker.id +
+			 '"></div></div>');
 			infoWindow.open(map, marker);
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
 			google.maps.event.addListener(infoWindow, 'closeclick', function() {
@@ -151,10 +152,9 @@ function initMap() {
 		//Center the map to marker's position
 		map.setCenter(locations[index].location);
 		markers[index].setIcon(highlightedIcon);
-
+		let infoWindowID = "near_position" + index;
 		//Send request to Foursquare API
-		let nearby_places = '';
-		//markers[index].position.lat/lng makes url ending with functions
+		//markers[index].position.lat/lng makes url end with functions
 		//So use values from the const locations to construct url
 		let request_url = 'https://api.foursquare.com/v2/venues/search';
 		$.ajax({
@@ -167,10 +167,18 @@ function initMap() {
 				'&ll=' + locations[index].location.lat + ',' + locations[index].location.lng + '',
 			async: true,
 			success: function (results) {
-				nearby_places = results['response']['venues'][0]['name'];
+				let venues = results['response']['venues'];
+				if (venues.length > 0) {
+					for (let i = 0; i < venues.length; i++) {
+						let name = venues[i]['name'];
+						let newItem = document.createElement("li");
+						newItem.textContent = name;
+						document.getElementById(infoWindowID).appendChild(newItem);
+					}
+				}
 			}
 		});
-		populateInfoWindow(markers[index], infoWindow, nearby_places);
+		populateInfoWindow(markers[index], infoWindow);
 	}
 
 	ko.applyBindings(new ViewModel());
