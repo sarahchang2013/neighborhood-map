@@ -130,10 +130,11 @@ function initMap() {
 		return markerImage;
 	}
 	//Open an infoWindow when item or marker is clicked
-	function populateInfoWindow(marker, infoWindow) {
+	function populateInfoWindow(marker, infoWindow, nearby) {
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
-			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address + '</div>');
+			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address +
+			 '<br>' + nearby + '<br></div>');
 			infoWindow.open(map, marker);
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
 			google.maps.event.addListener(infoWindow, 'closeclick', function() {
@@ -142,14 +143,34 @@ function initMap() {
 			});
 		}
 	}
+
 	//When list item or marker is clicked, 
 	//change marker color and open an infowindow
 	function respondToClick(index) {
 		let infoWindow = new google.maps.InfoWindow();
 		//Center the map to marker's position
-		map.setCenter(markers[index].position);
+		map.setCenter(locations[index].location);
 		markers[index].setIcon(highlightedIcon);
-		populateInfoWindow(markers[index], infoWindow);
+
+		//Send request to Foursquare API
+		let nearby_places = '';
+		//markers[index].position.lat/lng makes url ending with functions
+		//So use values from the const locations to construct url
+		let request_url = 'https://api.foursquare.com/v2/venues/search';
+		$.ajax({
+			url: request_url,
+			dataType: 'json',
+			data: 'categoryId=' + 
+				'4bf58dd8d48988d10e941735,4bf58dd8d48988d128941735,4bf58dd8d48988d16d941735' +
+				'&radius=200&v=20171231&client_id=KWI55GTO5YJAK1AT5FLT1X4OH0QTOMSY1FFQOAHNXNMIY1C5' + 
+				'&client_secret=' + 'HTK0SK1W3WW2HDDRFHIVMTA0FATA0N0YVHIUFC4KUUOTGS5B' + 
+				'&ll=' + locations[index].location.lat + ',' + locations[index].location.lng + '',
+			async: true,
+			success: function (results) {
+				nearby_places = results['response']['venues'][0]['name'];
+			}
+		});
+		populateInfoWindow(markers[index], infoWindow, nearby_places);
 	}
 
 	ko.applyBindings(new ViewModel());
