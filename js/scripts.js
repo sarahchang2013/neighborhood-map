@@ -134,7 +134,7 @@ function initMap() {
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
 			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address +
-			 '<br>Cafes and Restaurants Nearby:<br><div id="near_position' + marker.id +
+			 '<br>Cafes and Restaurants Nearby:<br>(Provided by Foursquare)<br><div id="near_position' + marker.id +
 			 '"></div></div>');
 			infoWindow.open(map, marker);
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
@@ -169,7 +169,7 @@ function initMap() {
 			success: function (results) {
 				let venues = results['response']['venues'];
 				if (venues.length > 0) {
-					for (let i = 0; i < venues.length; i++) {
+					for (let i = 0; i < venues.length && i < 10; i++) {
 						let name = venues[i]['name'];
 						let newItem = document.createElement("li");
 						newItem.textContent = name;
