@@ -7,9 +7,33 @@ body {
     padding: 0;
 }
 
-.search-list {
-	float: left;
+.hamburger-button {
+	font-size: 30px;
+	cursor: pointer;
 }
+
+.search-list {
+	height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.search-list h3 {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
 .map {
     height: 100%;
 }

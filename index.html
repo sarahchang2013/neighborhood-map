@@ -5,7 +5,8 @@
 		<link rel=stylesheet type=text/css href="css/styles.css">
 	</head>
 	<body>
-		<div class="search-list">
+		<span class="hamburger-button" onclick="openNav()">&#9776; open</span>
+		<div id="list" class="search-list">
 			<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
 			<div data-bind="foreach: locationList">
 				<div class="location" data-bind="if: display">

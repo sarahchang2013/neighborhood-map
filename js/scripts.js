@@ -1,3 +1,11 @@
+//Toggle list when hamburger icon is clicked
+function openNav() {
+    document.getElementById("list").style.width = "250px";
+    document.getElementById("map").style.left = "250px";
+}
+/**function closeNav() {
+    document.getElementById("list").style.width = "0";
+}*/
 //Locations, can be stored in a database and read from it
 //Additional functions to add places can be achieved with Places API
 const locations = [
