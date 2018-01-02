@@ -134,7 +134,7 @@ function initMap() {
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
 			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address +
-			 '<br>Cafes and Restaurants Nearby:<br>(Provided by Foursquare)<br><div id="near_position' + marker.id +
+			 '<br>Cafes and Restaurants Within 200m:<br>(Provided by Foursquare)<br><div id="near_position' + marker.id +
 			 '"></div></div>');
 			infoWindow.open(map, marker);
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
@@ -163,13 +163,13 @@ function initMap() {
 			data: 'categoryId=' + 
 				'4bf58dd8d48988d10e941735,4bf58dd8d48988d128941735,4bf58dd8d48988d16d941735' +
 				'&radius=200&v=20171231&client_id=KWI55GTO5YJAK1AT5FLT1X4OH0QTOMSY1FFQOAHNXNMIY1C5' + 
-				'&client_secret=' + 'HTK0SK1W3WW2HDDRFHIVMTA0FATA0N0YVHIUFC4KUUOTGS5B' + 
+				'&client_secret=HTK0SK1W3WW2HDDRFHIVMTA0FATA0N0YVHIUFC4KUUOTGS5B' + 
 				'&ll=' + locations[index].location.lat + ',' + locations[index].location.lng + '',
 			async: true,
 			success: function (results) {
 				let venues = results['response']['venues'];
 				if (venues.length > 0) {
-					for (let i = 0; i < venues.length && i < 10; i++) {
+					for (let i = 0; i < venues.length && i < 7; i++) {
 						let name = venues[i]['name'];
 						let newItem = document.createElement("li");
 						newItem.textContent = name;
@@ -180,6 +180,5 @@ function initMap() {
 		});
 		populateInfoWindow(markers[index], infoWindow);
 	}
-
 	ko.applyBindings(new ViewModel());
 }
