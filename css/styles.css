@@ -20,13 +20,14 @@ body {
 
 .banner h1 {
 	color: #fff;
-	font-size: 32px;
+	font-size: 30px;
 	margin: 1px;
 	text-align: center;
 }
 
 #hamburger-button {
-	font-size: 30px;
+	font-size: 28px;
+	padding: .2em;
 	cursor: pointer;
 	position: fixed;
     z-index: 1;
@@ -38,6 +39,7 @@ body {
 }
 
 #list {
+	width: 0px;
 	height: 100%;
     position: fixed;
     z-index: 1;
