@@ -1,8 +1,15 @@
 //Toggle list when hamburger icon is clicked
-function openNav() {
-    document.getElementById("list").style.width = "250px";
-    document.getElementById("map").style.left = "250px";
-    document.getElementById("hamburger-button").style.left = "250px";
+function toggleNav() {
+	if (document.getElementById("list").style.width == "0px") {
+   		document.getElementById("list").style.width = "250px";
+   		document.getElementById("map").style.left = "250px";
+    	document.getElementById("hamburger-button").style.left = "250px";
+    } else {
+    	document.getElementById("list").style.width = "0px";
+   		document.getElementById("map").style.left = "0px";
+    	document.getElementById("hamburger-button").style.left = "0px";
+    }
+
 }
 /**function closeNav() {
     document.getElementById("list").style.width = "0";
