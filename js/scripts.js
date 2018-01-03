@@ -2,6 +2,7 @@
 function openNav() {
     document.getElementById("list").style.width = "250px";
     document.getElementById("map").style.left = "250px";
+    document.getElementById("hamburger-button").style.left = "250px";
 }
 /**function closeNav() {
     document.getElementById("list").style.width = "0";

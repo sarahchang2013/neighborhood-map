@@ -7,9 +7,16 @@ body {
     padding: 0;
 }
 
-.hamburger-button {
+#hamburger-button {
 	font-size: 30px;
 	cursor: pointer;
+	position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+	transition: 0.5s;
+	background-color: #111;
+	color: #fff;
 }
 
 .search-list {
