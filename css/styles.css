@@ -8,6 +8,23 @@ body {
     background-color: #111;
 }
 
+.banner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 40px;
+	width: 100%;
+	z-index: 1;
+	background-color: #111;
+}
+
+.banner h1 {
+	color: #fff;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+}
+
 #hamburger-button {
 	font-size: 30px;
 	cursor: pointer;
@@ -41,6 +58,15 @@ body {
     transition: 0.3s;
 }
 
+#list h2 {
+    padding: 1px 1px 1px 1px;
+    text-decoration: none;
+    font-size: 13px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
 #list h3 {
     padding: 1px 1px 1px 1px;
     text-decoration: none;
@@ -51,9 +77,8 @@ body {
 }
 
 #map {
-	position: fixed;
     height: 100%;
-    top: 40px;
+    z-index: 0;
 }
 
 .location {

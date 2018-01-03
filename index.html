@@ -5,9 +5,12 @@
 		<link rel=stylesheet type=text/css href="css/styles.css">
 	</head>
 	<body>
-		<span id="hamburger-button" onclick="toggleNav()">&#9776;</span>
-		<div id="list">
+		<div class="banner">
+			<span id="hamburger-button" onclick="toggleNav()">&#9776;</span>
 			<h1>Belgrade City Guide</h1>
+		</div>
+		<div id="list">
+			<h2>Places must visit</h2>
 			<form id="searchBox" action="#">
 				<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
 				<input id="searchButton" type="button" value="Filter">
