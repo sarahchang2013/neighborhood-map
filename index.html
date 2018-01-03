@@ -6,15 +6,18 @@
 	</head>
 	<body>
 		<span id="hamburger-button" onclick="toggleNav()">&#9776;</span>
-		<div id="list" class="search-list">
-			<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
+		<div id="list">
+			<form id="searchBox" action="#">
+				<input data-bind="textInput: searchText" type="text" placeholder="Enter the place you want to visit">
+				<input id="searchButton" type="button" value="Filter">
+			</form>
 			<div data-bind="foreach: locationList">
 				<div class="location" data-bind="if: display">
 					<h3 data-bind="text: name, click: showInfo"></h3>
 				</div>
 			</div>
 		</div>
-		<div class="map" id="map"></div>
+		<div id="map"></div>
 		<script src="js/lib/knockout-3.4.2.js"></script>
 		<script src="js/lib/jquery-3.2.1.min.js"></script>
 		<script src="js/scripts.js"></script>

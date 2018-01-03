@@ -2,18 +2,16 @@
 function toggleNav() {
 	if (document.getElementById("list").style.width == "0px") {
    		document.getElementById("list").style.width = "250px";
-   		document.getElementById("map").style.left = "250px";
+   		//document.getElementById("map").style.left = "250px";
     	document.getElementById("hamburger-button").style.left = "250px";
     } else {
     	document.getElementById("list").style.width = "0px";
-   		document.getElementById("map").style.left = "0px";
+   		//document.getElementById("map").style.left = "0px";
     	document.getElementById("hamburger-button").style.left = "0px";
     }
 
 }
-/**function closeNav() {
-    document.getElementById("list").style.width = "0";
-}*/
+
 //Locations, can be stored in a database and read from it
 //Additional functions to add places can be achieved with Places API
 const locations = [
@@ -51,7 +49,22 @@ function initMap() {
 	// Constructor creates a new map - only center and zoom are required.
 	let map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 44.816667, lng: 20.466667},
-		zoom: 13
+		zoom: 13,
+		mapTypeControl: true,
+        mapTypeControlOptions: {
+        	style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        	position: google.maps.ControlPosition.TOP_CENTER
+        },
+        zoomControl: true,
+        zoomControlOptions: {
+        	position: google.maps.ControlPosition.RIGHT_CENTER
+        },
+        scaleControl: true,
+        streetViewControl: true,
+        streetViewControlOptions: {
+        	position: google.maps.ControlPosition.RIGHT_TOP
+        },
+        fullscreenControl: true
 	});
 
 	const defaultIcon = makeMarkerIcon('0091ff');
