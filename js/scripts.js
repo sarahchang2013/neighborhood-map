@@ -165,7 +165,7 @@ function initMap() {
 	//When list item or marker is clicked, 
 	//change marker color and open an infowindow
 	function respondToClick(index) {
-		let infoWindowID = "near_position" + index;
+		let infoWindowID = "place" + index;
 		//In case it populates an existing infoWindow
 		if (!document.getElementById(infoWindowID)) {
 			let infoWindow = new google.maps.InfoWindow();
@@ -181,10 +181,9 @@ function initMap() {
 		marker = markers[index];
 		if (infoWindow.marker != marker) {
 			infoWindow.marker = marker;
-			infoWindow.setContent('<div>' + marker.title + '<br>' + marker.address +
-			 '<br>Cafes and Restaurants Within 200m:<br>(Provided by Foursquare)<br>' +
-			 '<div id="' + infoWindowID +
-			 '"></div></div>');
+			infoWindow.setContent('<div id="place' + index + '"><div class="address"><h3>' + 
+				marker.title + '</h3>' + marker.address +
+			 	'<br></div></div>');
 			//infoWindow.addListener('çloseclick',function(){...}) doesn't work
 			google.maps.event.addListener(infoWindow, 'closeclick', function() {
 				infoWindow.marker.setIcon(defaultIcon);
@@ -206,12 +205,17 @@ function initMap() {
 				success: function (results) {
 					let venues = results['response']['venues'];
 					if (venues.length > 0) {
+						venueList = "";
 						for (let i = 0; i < venues.length && i < 7; i++) {
 							let name = venues[i]['name'];
-							let newItem = document.createElement("li");
-							newItem.textContent = name;
-							document.getElementById(infoWindowID).appendChild(newItem);
+							venueList += '<li>' + name + '</li>';
 						}
+						//Set infowindow content again if ajax succeeds
+						infoWindow.setContent('<div id="place' + index +'"><div class="address"><h3>' +
+							marker.title + '</h3>' +
+						 	marker.address +'<br></div><div class="venues">'+
+							'Cafes and Restaurants Within 200m:<br>(Provided by Foursquare)<br>' +
+							venueList + '</div></div>');
 					}
 				}
 			});

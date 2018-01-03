@@ -20,8 +20,8 @@ body {
 
 .banner h1 {
 	color: #fff;
-	padding: 0;
-	margin: 0;
+	padding: 2.5px;
+	margin: 2.5px;
 	text-align: center;
 }
 
@@ -83,4 +83,12 @@ body {
 
 .location {
 	cursor: pointer;
+}
+
+.address h3{
+	color: #e21111;
+}
+
+.venues {
+	color: #07c;
 }
