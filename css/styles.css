@@ -5,6 +5,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #111;
 }
 
 #hamburger-button {
@@ -21,7 +22,6 @@ body {
 
 #list {
 	height: 100%;
-    width: 0px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -51,7 +51,9 @@ body {
 }
 
 #map {
+	position: fixed;
     height: 100%;
+    top: 40px;
 }
 
 .location {

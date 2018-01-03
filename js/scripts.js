@@ -45,7 +45,10 @@ let searchText = ko.observable("");
 //Initialize the map when Google API is loaded
 //All google.xx calls should be put here
 //to avoid "undefined google" errors
-function initMap() {	
+function initMap() {
+	//Set the width of list to 0px to make toggleNav() work	
+	//#list {width="0px"} in stylesheet causes error at the first click
+	document.getElementById("list").style.width = "0px";
 	// Constructor creates a new map - only center and zoom are required.
 	let map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 44.816667, lng: 20.466667},
