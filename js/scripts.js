@@ -102,13 +102,15 @@ function initMap() {
 		for (let i = 0; i < locations.length; i++) {
 			let position = locations[i].location;
 			let title = locations[i].name;
+			let infoWindow = new google.maps.InfoWindow();
 			let marker = new google.maps.Marker({
 				position: position,
 				title: title,
 				animation: google.maps.Animation.DROP,
 				icon: defaultIcon,
 				id: i,
-				address: ""
+				address: "",
+				iw: infoWindow
 			});
 			//Get the address by reverse geocoding from marker.position
 			let geocoder = new google.maps.Geocoder;
@@ -166,12 +168,19 @@ function initMap() {
 	//change marker color and open an infowindow
 	function respondToClick(index) {
 		let infoWindowID = "place" + index;
-		//In case it populates an existing infoWindow
+		//Close other infowindows and center to the current one
+		for (let i = 0; i < markers.length; i++) {
+			if (i != index) {
+				markers[i].setIcon(defaultIcon);
+				markers[i].iw.close();
+			}
+		}
+		map.setCenter(locations[index].location);
+		//Check if one exists before populating a new infoWindow
 		if (!document.getElementById(infoWindowID)) {
 			let infoWindow = new google.maps.InfoWindow();
-			//Center the map to marker's position
-			map.setCenter(locations[index].location);
 			markers[index].setIcon(highlightedIcon);
+			//Populate a new infoWindow
 			populateInfoWindow(index, infoWindow, infoWindowID);
 		}
 	}
@@ -220,6 +229,8 @@ function initMap() {
 				}
 			});
 			infoWindow.open(map, marker);
+			//Associate infowindow to its marker
+			markers[index].iw = infoWindow;
 		}
 	}
 
