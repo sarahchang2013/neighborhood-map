@@ -90,3 +90,8 @@ body {
 .venues {
 	color: #07c;
 }
+
+.venue-error {
+	color: #babdc1;
+	font-size: 1em;
+}

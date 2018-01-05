@@ -12,6 +12,11 @@ function toggleNav() {
 
 }
 
+//Handle errors if map can't load
+function mapError () {
+	alert("Can't open Google Map.");
+}
+
 //Locations, can be stored in a database and read from it
 //Additional functions to add places can be achieved with Places API
 const locations = [
@@ -136,6 +141,10 @@ function initMap() {
 		}
 		//Display markers of all locations on map
 		map.fitBounds(bounds);
+		//Make sure map still shows all markers properly when resized
+		google.maps.event.addDomListener(window, 'resize', function() {
+ 			 map.fitBounds(bounds);
+		});
 
 		//Make the list an observable array
 		//Bind with input by "textInput: searchText" to instantly update
@@ -231,7 +240,11 @@ function initMap() {
 				},
 				//Print error message to console if request fails
 				error: function (jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
+					infoWindow.setContent('<div id="place' + index +'"><div class="address"><h3>' +
+							marker.title + '</h3>' +
+						 	marker.address +
+						 	'<br></div><span class="venue-error">' +
+						 	'(Service of nearby venues is temporarily unavailable.)</span></div>');
 				}
 			});
 			infoWindow.open(map, marker);
