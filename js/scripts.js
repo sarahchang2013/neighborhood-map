@@ -35,7 +35,7 @@ const locations = [
 		name: "Kalemegdan Park",
 		location: {lat: 44.822479, lng: 20.450888}
 	}
-]
+];
 
 //searchText needs to be global,
 //1.to be accessible for initMap when initially loaded,
@@ -46,7 +46,7 @@ let searchText = ko.observable("");
 //All google.xx calls should be put here
 //to avoid "undefined google" errors
 function initMap() {
-	//Set the width of list to 0px to make toggleNav() work	
+	//Set the width of list to 0px to make toggleNav() work
 	//#list {width="0px"} in stylesheet causes error at the first click
 	document.getElementById("list").style.width = "0px";
 	// Constructor creates a new map - only center and zoom are required.
@@ -73,7 +73,7 @@ function initMap() {
 	const defaultIcon = makeMarkerIcon('0091ff');
 	const highlightedIcon = makeMarkerIcon('ffff24');
 	let markers = [];
-	
+
 	//Define the model of Location
 	let Location = function(data, index) {
 		this.name = ko.observable(data.name);
@@ -211,6 +211,8 @@ function initMap() {
 					'&client_secret=HTK0SK1W3WW2HDDRFHIVMTA0FATA0N0YVHIUFC4KUUOTGS5B' + 
 					'&ll=' + locations[index].location.lat + ',' + locations[index].location.lng + '',
 				async: true,
+				//Get venue details if request succeeds;
+				//if fails, UI will remain unchanged
 				success: function (results) {
 					let venues = results['response']['venues'];
 					if (venues.length > 0) {
@@ -226,6 +228,10 @@ function initMap() {
 							'Cafes and Restaurants Within 200m:<br>(Provided by Foursquare)<br>' +
 							venueList + '</div></div>');
 					}
+				},
+				//Print error message to console if request fails
+				error: function (jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
 				}
 			});
 			infoWindow.open(map, marker);
@@ -234,6 +240,5 @@ function initMap() {
 		}
 	}
 
-	
 	ko.applyBindings(new ViewModel());
 }
