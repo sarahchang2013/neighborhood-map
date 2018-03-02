@@ -3,7 +3,7 @@
 This single-page application is a city guide to Belgrade, Serbia.
 Users can click on the markers on the map or items on the list to
 see names of cafes and restaurants near the selected location.
-The list and map have a filtering funtion which shows the markers 
+The list and map have a filtering function which shows the markers 
 and list items that match input text.
 
 ### Prerequisites
